@@ -1,0 +1,64 @@
+/* Carne fixa que assa conforme a rolagem. As variáveis (--meat, --fat, --marks...) são atualizadas por js/meat.js */
+.meat-stage {
+  position: fixed;
+  right: max(12px, 2vw);
+  bottom: max(10px, 2vh);
+  width: clamp(104px, 20vw, 260px);
+  padding-bottom: 30px;
+  z-index: 7; /* acima do conteúdo, abaixo do grão (8) e do topo (10) */
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(24px) scale(.92);
+  transition: opacity .5s ease, transform .5s ease;
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, .35));
+}
+.meat-stage.is-visible { opacity: 1; transform: none; }
+.meat { display: block; width: 100%; height: auto; overflow: visible; }
+
+/* Carne */
+.m-body { fill: var(--meat, #c4424f); transition: fill .25s linear; }
+.m-fat { fill: var(--fat, #eed8cc); transition: fill .25s linear; }
+.m-edge { fill: none; stroke: rgba(0, 0, 0, .35); stroke-width: 2; }
+.m-mark { fill: none; stroke: #1c0f08; stroke-width: 7; stroke-linecap: round; }
+.m-marks { opacity: var(--marks, 0); }
+.m-marks2 { opacity: var(--marks2, 0); }
+
+/* Grelha, brasa e fogo */
+.m-grate rect { fill: #3b2d24; }
+.m-glow, .m-flames { opacity: var(--flame, .1); }
+.m-flame { fill: #ff7a2a; transform-box: fill-box; transform-origin: 50% 100%; animation: meat-flicker 1.1s ease-in-out infinite alternate; }
+.m-flame:nth-child(2) { animation-delay: .25s; fill: #ff9a2e; }
+.m-flame:nth-child(3) { animation-delay: .5s; }
+.m-flame:nth-child(4) { animation-delay: .15s; fill: #ff9a2e; }
+
+/* Vapor e brilho de "pronta" */
+.m-steam { opacity: var(--steam, 0); }
+.m-steam path { fill: none; stroke: #fff; stroke-opacity: .55; stroke-width: 5; stroke-linecap: round; animation: meat-steam 3s ease-in-out infinite; }
+.m-steam path:nth-child(2) { animation-delay: .8s; }
+.m-steam path:nth-child(3) { animation-delay: 1.6s; }
+.m-spark { opacity: var(--ready, 0); fill: #ffd36b; transform-box: fill-box; transform-origin: center; animation: meat-twinkle 1.6s ease-in-out infinite; }
+.m-spark:nth-of-type(2) { animation-delay: .5s; }
+
+/* Etiqueta do estágio */
+.meat-label {
+  position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  white-space: nowrap; padding: 6px 12px; border-radius: 999px;
+  background: rgba(23, 17, 13, .94); color: #f6eddf; border: 1px solid #f4b74a;
+  font: 700 12px/1 var(--body, system-ui, sans-serif);
+}
+
+@keyframes meat-flicker { from { transform: scaleY(.82) scaleX(.96); } to { transform: scaleY(1.12) scaleX(1.04); } }
+@keyframes meat-steam {
+  0% { transform: translateY(14px); opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: translateY(-16px); opacity: 0; }
+}
+@keyframes meat-twinkle { 0%, 100% { transform: scale(.6); } 50% { transform: scale(1.15); } }
+
+@media (max-width: 650px) { .meat-label { font-size: 11px; padding: 5px 10px; } }
+@media (max-height: 420px), print { .meat-stage { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .meat-stage { transition: none; }
+  .m-flame, .m-steam path, .m-spark { animation: none; }
+  .m-body, .m-fat { transition: none; }
+}
