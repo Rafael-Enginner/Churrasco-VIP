@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const phone = "5561996504544";
+  const phone = "5561993316047";
   const form = document.getElementById("rsvpForm");
   const nameInput = document.getElementById("guestName");
   const countInput = document.getElementById("guestCount");
@@ -18,7 +18,7 @@
       }
 
       const message = [
-        "Fala, Thiago! Confirmo presença no Churrasco VIP de 24/10, a partir das 11h, no Total Ville Quadra 203.",
+        "Fala, Rafael! Confirmo presença no Churrasco VIP de 24/10, a partir das 11h, no Total Ville Quadra 203.",
         `Nome: ${name}.`,
         `Pessoas: ${count}.`
       ].join(" ");
