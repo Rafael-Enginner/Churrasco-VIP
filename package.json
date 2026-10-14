@@ -1,6 +1,6 @@
 {
   "name": "churrasco-vip-fullstack",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,8 +15,8 @@
     "helmet": "^8.1.0",
     "express-rate-limit": "^7.5.0",
     "express-session": "^1.18.1",
-    "connect-sqlite3": "^0.9.16",
-    "better-sqlite3": "^11.8.1",
-    "bcryptjs": "^2.4.3"
+    "bcryptjs": "^2.4.3",
+    "connect-pg-simple": "^10.0.0",
+    "pg": "^8.13.0"
   }
 }

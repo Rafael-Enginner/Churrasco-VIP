@@ -1,42 +1,54 @@
-# Churrasco VIP — Full-stack
+# Churrasco VIP — PostgreSQL / Supabase
 
-Landing page com animações, player de música local, registro de presença em SQLite e painel administrativo protegido por senha.
+Projeto adaptado do ZIP original. Mantém o site, player local, animações, RSVP e painel `/admin`. O cadastro e as sessões do administrador são armazenados no PostgreSQL do Supabase, **não no SQLite local**.
 
-## Onde colocar os arquivos?
+## 1. Criar o banco gratuito no Supabase
+1. Acesse https://supabase.com e crie um projeto.
+2. Em **Connect**, obtenha a **connection string PostgreSQL**. Para Render, prefira o **Session pooler** (porta 5432, compatível com IPv4) quando disponível. Copie a URI completa e substitua a senha de banco; o usuário pode ser diferente de `postgres`.
+3. Guarde a URI **somente** na variável de ambiente `DATABASE_URL` do servidor. Nunca a coloque em `public/`, no GitHub ou no JavaScript do navegador.
+4. O servidor cria automaticamente as tabelas `guests` e `user_sessions` na primeira inicialização. O usuário de conexão precisa de permissão de criação no schema.
 
-Envie **todo o conteúdo desta pasta** para a raiz do repositório GitHub. O GitHub armazena o código, mas **GitHub Pages não executa Node.js**. Para ter o cadastro e painel funcionando publicamente, publique o projeto completo em uma hospedagem Node.js com **disco persistente** (para o SQLite).
+## 2. Gerar credenciais
+- Instale Node.js 20+.
+- Execute `npm install`.
+- Execute `npm run hash-password` para gerar `ADMIN_PASSWORD_HASH` a partir de uma senha forte.
+- Gere `SESSION_SECRET` aleatório com 32+ caracteres (ex.: `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"`).
+- Não publique o hash, segredo ou `DATABASE_URL`.
 
-## Como iniciar no computador
+## 3. Testar localmente
+1. Copie `.env.example` para `.env` e preencha os valores.
+2. Defina `NODE_ENV=development` e `TRUST_PROXY=0`.
+3. Execute `node --env-file=.env server.js` (Node 20.6+) ou configure as variáveis do sistema e use `npm start`.
+4. Site: http://localhost:3000 | Painel: http://localhost:3000/admin.
+5. Teste envio de RSVP, login, listagem, confirmação, exclusão e exportação CSV.
 
-1. Instale Node.js 20+ e execute `npm install` na pasta do projeto.
-2. Copie `.env.example` para `.env`.
-3. Execute `npm run hash-password`, escolha uma senha forte e copie o hash para `ADMIN_PASSWORD_HASH` no `.env`.
-4. Defina `SESSION_SECRET` com um valor aleatório de pelo menos 32 caracteres.
-5. Execute `npm start`. **Atenção:** Node.js não carrega `.env` automaticamente nesta versão; inicie com `node --env-file=.env server.js` no Node 20.6+ ou configure as variáveis no ambiente.
-6. Site: `http://localhost:3000`; painel: `http://localhost:3000/admin`.
+## 4. Publicar gratuitamente no Render
+1. Suba os arquivos do projeto no GitHub, **sem o `.env`**.
+2. Em https://render.com crie **New > Web Service**, conecte o repositório e selecione runtime Node.
+3. Build command: `npm install`
+4. Start command: `npm start`
+5. Configure estas variáveis no Render:
+   - `NODE_ENV=production`
+   - `TRUST_PROXY=1`
+   - `SESSION_SECRET=<segredo aleatório>`
+   - `ADMIN_PASSWORD_HASH=<hash bcrypt>`
+   - `DATABASE_URL=<URI PostgreSQL do Supabase>`
+6. Publique e acesse `https://seu-servico.onrender.com` e `/admin`.
+7. Teste HTTPS, cookies, persistência dos registros e login após reinicialização.
 
-## Como publicar
+**Atenção:** o Render gratuito pode suspender a aplicação por inatividade e o Supabase gratuito pode pausar o projeto. Verifique os limites atuais dos planos. O uso de um banco remoto evita perda de dados por disco efêmero do Render, mas não substitui backups.
 
-- Conecte o repositório a um provedor de hospedagem Node.js.
-- Instale dependências com `npm install` e inicie com `npm start`.
-- Configure `NODE_ENV=production`, `ADMIN_PASSWORD_HASH`, `SESSION_SECRET` e `DB_PATH` nas variáveis de ambiente do provedor.
-- Configure HTTPS e armazenamento persistente para `DB_PATH`, com backups.
-- Configure `TRUST_PROXY=1` **somente** se a hospedagem usar proxy reverso confiável.
-- Teste `/api/health`, o formulário e `/admin`.
+## Segurança e privacidade
+- SQL parametrizado, sessões no PostgreSQL, senha bcrypt, CSRF e cookies `HttpOnly` / `Secure` em produção.
+- O front-end não recebe `DATABASE_URL`, `SESSION_SECRET` ou `ADMIN_PASSWORD_HASH`.
+- A lista contém dados pessoais: proteja acesso e remova informações após o evento.
+- O formulário de RSVP não verifica identidade nem impede duplicatas; evite tratar o registro como confirmação autenticada.
+- A senha de conexão do banco **não** é a chave pública `anon` nem a `service_role` do Supabase.
+- **TLS:** o cliente PostgreSQL exige validação de certificado. Se a conexão falhar por certificado, configure a CA apropriada para seu ambiente; não desative a verificação TLS em produção.
+- As músicas escolhidas pelo visitante ficam no dispositivo, sem upload ao servidor.
 
-## Recursos
-
-- API `POST /api/rsvp`: registra nome e quantidade de pessoas.
-- Painel `/admin`: lista convidados, inclui manualmente, altera status, exclui e exporta CSV.
-- API administrativa exige sessão e token CSRF.
-- Player: cada visitante pode selecionar arquivos MP3 ou outros formatos compatíveis. **O arquivo permanece no dispositivo**.
-- O projeto não inclui gravações comerciais de música sertaneja/modão, pois exigem direitos de distribuição.
-- O seletor de ponto da carne foi removido integralmente.
-
-## Privacidade
-
-Os dados do formulário ficam no SQLite do servidor; o organizador deve proteger a lista, informar essa finalidade aos convidados e excluir dados quando não forem necessários. O WhatsApp abre para envio opcional; o cadastro ocorre antes da abertura. Não há integração com API oficial do WhatsApp.
-
-## Observações
-
-O código é uma base funcional para testes, **não foi validado em produção**. Revise permissões e privacidade antes de divulgar. Confirme data, endereço e telefone antes da publicação.
+## Arquivos
+- `server.js`: API e persistência PostgreSQL
+- `public/`: site e painel
+- `scripts/hash-password.js`: gerador de hash de senha
+- `.env.example`: exemplo sem segredos

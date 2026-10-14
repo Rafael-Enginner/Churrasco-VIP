@@ -1,3 +1,3 @@
 # Segurança
 
-Reporte vulnerabilidades ao mantenedor em canal privado. Não publique dados de convidados, senhas ou segredos. Use HTTPS, senha forte e backups. O projeto não passou por auditoria independente.
+Não faça commit de `.env`, senhas, URI PostgreSQL, hashes de senha administrativos, segredos de sessão ou exportações de convidados. Configure variáveis sensíveis exclusivamente no Render. Proteja o painel com senha forte e HTTPS. Faça backups do banco, monitore acessos e exclua dados após o evento. Não desative a validação TLS do PostgreSQL.
