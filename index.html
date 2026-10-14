@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#17110d">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="description" content="Churrasco VIP — comida boa, resenha melhor ainda. 24 de outubro, a partir das 11h, no Total Ville Quadra 203.">
   <title>Churrasco VIP — A resenha começa na brasa</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +13,7 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
   <div class="grain" aria-hidden="true"></div>
   <header class="topbar">
     <a class="brand" href="#inicio" aria-label="Churrasco VIP, início"><span class="brand-mark">CV<span>+</span></span><span>CHURRASCO <b>VIP</b></span></a>
@@ -21,7 +23,7 @@
     <a class="nav-cta" href="#confirmar">Confirmar presença <span>↗</span></a>
   </header>
 
-  <main>
+  <main id="conteudo">
     <section class="hero" id="inicio">
       <div class="hero-copy">
         <p class="eyebrow"><span class="eyebrow-line"></span> BRASA ACESA. COPOS CHEIOS. RESENHA GARANTIDA.</p>
@@ -60,7 +62,7 @@
       <div class="detail-grid">
         <article class="detail-card"><span class="detail-number">01 / DATA</span><div class="detail-symbol">▦</div><h3>24 de outubro</h3><p>Separa o dia e avisa a galera. O encontro é pra curtir com calma.</p></article>
         <article class="detail-card"><span class="detail-number">02 / HORÁRIO</span><div class="detail-symbol">◷</div><h3>A partir das 11h</h3><p>Chega no horário, com fome e disposição pra uma boa resenha.</p></article>
-        <article class="detail-card"><span class="detail-number">03 / LOCAL</span><div class="detail-symbol">⌖</div><h3>Total Ville · Qd. 203</h3><p>Use o link do mapa pra abrir a localização certinha no celular.</p><a href="https://maps.app.goo.gl/sg9z37GmZv5PtmJ48" target="_blank" rel="noopener">Abrir no Google Maps ↗</a></article>
+        <article class="detail-card"><span class="detail-number">03 / LOCAL</span><div class="detail-symbol">⌖</div><h3>Total Ville · Qd. 203</h3><p>Use o link do mapa pra abrir a localização certinha no celular.</p><a href="https://maps.app.goo.gl/sg9z37GmZv5PtmJ48" target="_blank" rel="noopener noreferrer">Abrir no Google Maps ↗</a></article>
       </div>
     </section>
 
@@ -78,18 +80,18 @@
 
     <section class="location section-wrap" id="local">
       <div class="location-card">
-        <div class="location-copy"><p class="eyebrow">PÕE NO GPS</p><h2>O destino é<br><em>a resenha.</em></h2><p class="location-address"><span>⌖</span> Total Ville · Quadra 203</p><p class="muted">Abra a localização no Google Maps para conferir o trajeto antes de sair.</p><a class="button button-primary" href="https://maps.app.goo.gl/sg9z37GmZv5PtmJ48" target="_blank" rel="noopener">Traçar rota <span>↗</span></a></div>
-        <a class="map-panel" href="https://maps.app.goo.gl/sg9z37GmZv5PtmJ48" target="_blank" rel="noopener" aria-label="Abrir localização no Google Maps"><div class="map-grid"></div><div class="map-pin"><span>⌖</span></div><div class="map-label">TOTAL VILLE <b>QUADRA 203</b></div><span class="map-open">ABRIR MAPA ↗</span></a>
+        <div class="location-copy"><p class="eyebrow">PÕE NO GPS</p><h2>O destino é<br><em>a resenha.</em></h2><p class="location-address"><span>⌖</span> Total Ville · Quadra 203</p><p class="muted">Abra a localização no Google Maps para conferir o trajeto antes de sair.</p><a class="button button-primary" href="https://maps.app.goo.gl/sg9z37GmZv5PtmJ48" target="_blank" rel="noopener noreferrer">Traçar rota <span>↗</span></a></div>
+        <a class="map-panel" href="https://maps.app.goo.gl/sg9z37GmZv5PtmJ48" target="_blank" rel="noopener noreferrer" aria-label="Abrir localização no Google Maps"><div class="map-grid"></div><div class="map-pin"><span>⌖</span></div><div class="map-label">TOTAL VILLE <b>QUADRA 203</b></div><span class="map-open">ABRIR MAPA ↗</span></a>
       </div>
     </section>
 
     <section class="rsvp section-wrap" id="confirmar">
       <div class="rsvp-copy"><p class="eyebrow">VAI FICAR DE FORA?</p><h2>Confirma aí.<br><em>A brasa te espera.</em></h2><p>Confirma sua presença com o organizador pelo WhatsApp. É rapidinho.</p><div class="contact-line"><span class="contact-avatar">TS</span><span><small>FALA COM</small><strong>Thiago Souza</strong><small>(61) 99650-4544</small></span></div></div>
-      <div class="rsvp-panel"><div class="rsvp-panel-top"><span>LISTA DA RESENHA</span><span class="live-dot">● CONFIRMAÇÃO ABERTA</span></div><h3>Seu nome na lista?</h3><p>Toque no botão abaixo e mande sua confirmação direto para o Thiago.</p><form id="rsvpForm"><label for="guestName">Como podemos te chamar?</label><input id="guestName" name="guestName" type="text" placeholder="Seu nome" required maxlength="80"><label for="guestCount">Quantas pessoas vão?</label><select id="guestCount" name="guestCount"><option value="1">Só eu</option><option value="2">2 pessoas</option><option value="3">3 pessoas</option><option value="4">4 pessoas</option><option value="5 ou mais">5 ou mais pessoas</option></select><button class="button button-primary button-full" type="submit">Confirmar pelo WhatsApp <span>↗</span></button></form><small class="privacy-note">A confirmação será enviada pelo WhatsApp. Nenhum dado é salvo neste site.</small></div>
+      <div class="rsvp-panel"><div class="rsvp-panel-top"><span>LISTA DA RESENHA</span><span class="live-dot">● CONFIRMAÇÃO ABERTA</span></div><h3>Seu nome na lista?</h3><p>Toque no botão abaixo e mande sua confirmação direto para o Thiago.</p><form id="rsvpForm"><label for="guestName">Como podemos te chamar?</label><input id="guestName" name="guestName" type="text" placeholder="Seu nome" required maxlength="80" autocomplete="name"><label for="guestCount">Quantas pessoas vão?</label><select id="guestCount" name="guestCount"><option value="1">Só eu</option><option value="2">2 pessoas</option><option value="3">3 pessoas</option><option value="4">4 pessoas</option><option value="5 ou mais">5 ou mais pessoas</option></select><button class="button button-primary button-full" type="submit">Confirmar pelo WhatsApp <span>↗</span></button></form><small class="privacy-note">A confirmação será enviada pelo WhatsApp. Nenhum dado é salvo neste site.</small></div>
     </section>
   </main>
 
-  <footer><a class="brand" href="#inicio"><span class="brand-mark">CV<span>+</span></span><span>CHURRASCO <b>VIP</b></span></a><p>Feito pra reunir. Temperado com resenha. <span>♥</span></p><a href="https://wa.me/5561996504544" target="_blank" rel="noopener">Contato do organizador ↗</a></footer>
-  <script src="js/script.js"></script>
+  <footer><a class="brand" href="#inicio"><span class="brand-mark">CV<span>+</span></span><span>CHURRASCO <b>VIP</b></span></a><p>Feito pra reunir. Temperado com resenha. <span>♥</span></p><a href="https://wa.me/5561996504544" target="_blank" rel="noopener noreferrer">Contato do organizador ↗</a></footer>
+  <script src="js/script.js" defer></script>
 </body>
 </html>
