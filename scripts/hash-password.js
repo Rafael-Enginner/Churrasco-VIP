@@ -1,1 +1,0 @@
-import bcrypt from 'bcryptjs';import readline from 'node:readline/promises';const r=readline.createInterface({input:process.stdin,output:process.stdout});const p=await r.question('Senha forte para o painel (mínimo 12 caracteres): ');r.close();if(p.length<12){console.error('Senha curta');process.exit(1)}console.log('ADMIN_PASSWORD_HASH='+await bcrypt.hash(p,12));
