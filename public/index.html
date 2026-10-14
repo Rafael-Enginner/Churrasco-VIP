@@ -7,6 +7,7 @@
   <meta name="theme-color" content="#17110d">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="description" content="Churrasco VIP — comida boa, resenha melhor ainda. 24 de outubro, a partir das 11h, no Total Ville Quadra 203.">
+  <link rel="stylesheet" href="/css/meat.css">
   <title>Churrasco VIP — A resenha começa na brasa</title>
 
 
@@ -98,6 +99,88 @@
 
     <section class="rsvp section-wrap" id="confirmar">
       <div class="rsvp-copy"><p class="eyebrow">VAI FICAR DE FORA?</p><h2>Confirma aí.<br><em>A resenha te espera.</em></h2><p>Registre sua presença aqui e, se quiser, avise o organizador pelo WhatsApp. É rapidinho.</p><div class="contact-line"><span class="contact-avatar" aria-hidden="true">RM</span><span><small>FALA COM</small><strong>Rafael Moraes</strong><small>(61) 99331-6047</small></span></div></div>
+
+      <section class="meat-section" id="meatSection" aria-label="Carne assando durante a rolagem">
+  <div class="meat-sticky">
+    <div class="meat-content">
+      <p class="meat-eyebrow">O CHURRASCO ESTÁ NO FOGO</p>
+      <h2>Do jeito que a gente gosta!</h2>
+      <p class="meat-description">
+        Continue rolando para acompanhar o preparo.
+      </p>
+
+      <div class="meat-stage" id="meatStage" data-stage="0">
+        <svg
+          class="meat-svg"
+          viewBox="0 0 440 340"
+          role="img"
+          aria-label="Ilustração de uma carne assando na churrasqueira"
+        >
+          <defs>
+            <linearGradient id="meatGradient" x1="0" y1="0" x2="1" y2="1">
+              <stop class="meat-gradient-start" offset="0%" />
+              <stop class="meat-gradient-end" offset="100%" />
+            </linearGradient>
+
+            <radialGradient id="fireGlow">
+              <stop offset="0%" stop-color="#ff8a00" stop-opacity=".55" />
+              <stop offset="100%" stop-color="#ff8a00" stop-opacity="0" />
+            </radialGradient>
+          </defs>
+
+          <ellipse cx="220" cy="260" rx="175" ry="60" fill="url(#fireGlow)" />
+
+          <g class="meat-flames">
+            <path d="M125 268 Q92 230 128 192 Q121 225 151 231 Q172 190 157 170 Q211 215 176 269Z" />
+            <path d="M208 276 Q174 234 210 180 Q208 218 236 229 Q261 197 250 176 Q302 237 260 276Z" />
+            <path d="M292 268 Q267 230 298 199 Q289 226 318 233 Q335 207 326 192 Q365 240 336 268Z" />
+          </g>
+
+          <g class="meat-smoke">
+            <path d="M150 130 Q125 105 150 75 Q175 45 149 20" />
+            <path d="M220 116 Q195 85 220 58 Q245 32 220 8" />
+            <path d="M285 130 Q265 103 289 76 Q310 50 288 23" />
+          </g>
+
+          <g class="meat-piece">
+            <path
+              class="meat-outline"
+              d="M107 153 C125 102 191 87 239 105
+                 C284 88 343 117 353 166
+                 C364 217 323 249 270 244
+                 C218 268 148 252 117 221
+                 C98 201 95 174 107 153Z"
+            />
+            <path
+              class="meat-fat"
+              d="M126 154 C148 121 190 110 232 125
+                 C278 109 324 135 333 168"
+            />
+            <path class="meat-grill-mark" d="M160 148 L137 206" />
+            <path class="meat-grill-mark" d="M216 133 L191 226" />
+            <path class="meat-grill-mark" d="M273 139 L247 230" />
+            <path class="meat-grill-mark" d="M321 157 L298 215" />
+          </g>
+
+          <g class="meat-grill">
+            <path d="M65 268 H375" />
+            <path d="M85 280 H355" />
+            <path d="M120 258 V289 M170 258 V289 M220 258 V289 M270 258 V289 M320 258 V289" />
+          </g>
+        </svg>
+      </div>
+
+      <div class="meat-status" aria-live="polite">
+        <span class="meat-status-dot"></span>
+        <span id="meatLabel">Crua</span>
+      </div>
+
+      <div class="meat-progress" aria-hidden="true">
+        <div class="meat-progress-fill" id="meatProgress"></div>
+      </div>
+    </div>
+  </div>
+</section>
 
       <div class="rsvp-panel">
         <div class="rsvp-panel-top"><span>LISTA DA RESENHA</span><span class="live-dot">● CONFIRMAÇÃO ABERTA</span></div>
