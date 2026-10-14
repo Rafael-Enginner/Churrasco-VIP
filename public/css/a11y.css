@@ -1,0 +1,14 @@
+/* ===== Acessibilidade (carregar depois de styles.css, também no index.html) ===== */
+[hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:focus-visible { outline: 3px solid var(--gold, #f4b74a); outline-offset: 3px; }
+
+/* Contraste: #7f6e60 sobre fundo creme dava ~4,1:1 em texto de 12px. */
+.detail-card p, .rsvp-copy > p:not(.eyebrow) { color: #5f5043; font-size: 14px; }
+.muted { font-size: 14px; }
+
+/* Mensagens do formulário */
+.form-status { min-height: 1.5em; margin: 12px 0 0; font-weight: 600; }
+.form-status[data-state="ok"] { color: #9be7a8; }
+.form-status[data-state="error"] { color: #ffb4a0; }
+#whatsappLink { margin-top: 12px; text-align: center; }

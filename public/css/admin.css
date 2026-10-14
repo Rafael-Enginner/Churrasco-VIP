@@ -1,0 +1,14 @@
+/* ===== Admin (movido do <style> inline do admin.html) ===== */
+body.admin { padding: 30px; max-width: 1150px; margin: auto; }
+body.admin h1 { font-family: var(--display); }
+.panel { background: var(--panel); padding: 24px; margin: 20px 0; border: 1px solid var(--line); }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.admin input, .admin select, .admin button { padding: 12px; margin: 5px; background: #34251b; color: #fff; border: 1px solid #71513b; font: inherit; }
+.admin button { cursor: pointer; }
+.admin button:disabled { opacity: .5; cursor: not-allowed; }
+.admin table { width: 100%; border-collapse: collapse; }
+.admin td, .admin th { padding: 12px; border-bottom: 1px solid #71513b; text-align: left; }
+.scroll { overflow: auto; }
+.pager { display: flex; gap: 12px; align-items: center; justify-content: center; margin-top: 16px; }
+.error { color: #ffb74a; }
+.hide { display: none; }

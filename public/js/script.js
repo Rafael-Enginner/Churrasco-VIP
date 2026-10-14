@@ -1,1 +1,107 @@
-(()=>{'use strict';const $=id=>document.getElementById(id);const form=$('rsvpForm'),status=$('rsvpStatus');form?.addEventListener('submit',async e=>{e.preventDefault();const name=$('guestName').value.trim(),guestCount=$('guestCount').value;if(!name||name.length>80){status.textContent='Informe um nome válido.';return}const btn=form.querySelector('button[type=submit]');btn.disabled=true;status.textContent='Registrando presença…';try{const res=await fetch('/api/rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,guestCount})});const data=await res.json();if(!res.ok)throw Error(data.error||'Erro ao registrar');status.textContent='Presença registrada! Abrindo WhatsApp para você enviar a mensagem.';const msg=`Fala, Rafael! Confirmo presença no Churrasco VIP de 24/10. Nome: ${name}. Pessoas: ${guestCount}.`;const a=document.createElement('a');a.href=`https://wa.me/5561993316047?text=${encodeURIComponent(msg)}`;a.target='_blank';a.rel='noopener noreferrer';a.click();form.reset()}catch(err){status.textContent=err.message}finally{btn.disabled=false}});const input=$('musicFiles'),audio=$('audioPlayer'),playlist=$('playlist'),title=$('trackTitle');let tracks=[],url;function playAt(i){if(!tracks[i])return;if(url)URL.revokeObjectURL(url);url=URL.createObjectURL(tracks[i]);audio.src=url;title.textContent=tracks[i].name;playlist.value=String(i);audio.play().catch(()=>{});}input?.addEventListener('change',()=>{tracks=Array.from(input.files||[]).filter(f=>f.type.startsWith('audio/')||/\.(mp3|wav|ogg|m4a)$/i.test(f.name));playlist.replaceChildren();tracks.forEach((f,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=f.name;playlist.append(o)});if(tracks.length)playAt(0)});playlist?.addEventListener('change',()=>playAt(Number(playlist.value)));audio?.addEventListener('ended',()=>{const i=Number(playlist.value);if(i+1<tracks.length)playAt(i+1)});window.addEventListener('pagehide',()=>{if(url)URL.revokeObjectURL(url)})})();
+(() => {
+  "use strict";
+
+  const $ = (id) => document.getElementById(id);
+  const WHATSAPP = "5561993316047";
+  const TIMEOUT_MS = 25000; // o plano gratuito do Render pode demorar para "acordar"
+
+  /* ---------- Confirmação de presença ---------- */
+  const form = $("rsvpForm");
+  const status = $("rsvpStatus");
+  const whatsappLink = $("whatsappLink");
+
+  function setStatus(message, state = "info") {
+    if (!status) return;
+    status.textContent = message;
+    status.dataset.state = state;
+  }
+
+  async function postJson(url, data) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        signal: controller.signal,
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || "Erro ao registrar. Tente novamente.");
+      return body;
+    } catch (err) {
+      if (err.name === "AbortError") throw new Error("O servidor demorou a responder. Tente de novo em instantes.");
+      throw err;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const name = $("guestName").value.trim();
+    const guestCount = $("guestCount").value;
+
+    if (!name || name.length > 80) {
+      setStatus("Informe um nome válido (até 80 caracteres).", "error");
+      $("guestName").focus();
+      return;
+    }
+
+    const button = form.querySelector("button[type=submit]");
+    button.disabled = true;
+    setStatus("Registrando presença…");
+    if (whatsappLink) whatsappLink.hidden = true;
+
+    try {
+      const result = await postJson("/api/rsvp", { name, guestCount });
+      setStatus(result.updated ? "Presença atualizada!" : "Presença registrada!", "ok");
+
+      // O link é mostrado em vez de aberto sozinho: navegadores bloqueiam abertura após await.
+      if (whatsappLink) {
+        const text = `Fala, Rafael! Confirmo presença no Churrasco VIP de 24/10. Nome: ${name}. Pessoas: ${guestCount}.`;
+        whatsappLink.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
+        whatsappLink.hidden = false;
+      }
+      form.reset();
+    } catch (err) {
+      setStatus(err.message, "error");
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  /* ---------- Player de música (arquivos locais; só ativa se existir no HTML) ---------- */
+  const input = $("musicFiles");
+  const audio = $("audioPlayer");
+  const playlist = $("playlist");
+  const title = $("trackTitle");
+  if (!input || !audio || !playlist || !title) return;
+
+  let tracks = [];
+  let currentUrl = null;
+
+  function playAt(index) {
+    if (!tracks[index]) return;
+    if (currentUrl) URL.revokeObjectURL(currentUrl);
+    currentUrl = URL.createObjectURL(tracks[index]);
+    audio.src = currentUrl;
+    title.textContent = tracks[index].name;
+    playlist.value = String(index);
+    audio.play().catch(() => {});
+  }
+
+  input.addEventListener("change", () => {
+    tracks = Array.from(input.files || []).filter(
+      (file) => file.type.startsWith("audio/") || /\.(mp3|wav|ogg|m4a)$/i.test(file.name)
+    );
+    playlist.replaceChildren(
+      ...tracks.map((file, i) => Object.assign(document.createElement("option"), { value: String(i), textContent: file.name }))
+    );
+    if (tracks.length) playAt(0);
+  });
+
+  playlist.addEventListener("change", () => playAt(Number(playlist.value)));
+  audio.addEventListener("ended", () => playAt(Number(playlist.value) + 1));
+  window.addEventListener("pagehide", () => currentUrl && URL.revokeObjectURL(currentUrl));
+})();

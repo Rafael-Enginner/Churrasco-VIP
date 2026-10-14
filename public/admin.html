@@ -1,1 +1,68 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Admin · Churrasco VIP</title><link rel="stylesheet" href="/css/styles.css"><style>body{padding:30px;max-width:1150px;margin:auto}h1{font-family:var(--display)}.panel{background:var(--panel);padding:24px;margin:20px 0;border:1px solid var(--line)}input,select,button{padding:12px;margin:5px;background:#34251b;color:#fff;border:1px solid #71513b}button{cursor:pointer}.hide{display:none}table{width:100%;border-collapse:collapse}td,th{padding:12px;border-bottom:1px solid #71513b;text-align:left}.scroll{overflow:auto}.error{color:#ffb74a}</style></head><body><a href="/">← Voltar ao site</a><h1>Administração de convidados</h1><section id="login" class="panel"><h2>Entrar</h2><form id="loginForm"><label>Senha <input type="password" id="password" required autocomplete="current-password"></label><button>Entrar</button></form><p id="loginStatus" class="error" role="status"></p></section><main id="dashboard" class="hide"><div class="panel"><strong id="totals"></strong> <button id="exportBtn">Exportar CSV</button> <button id="logoutBtn">Sair</button></div><section class="panel"><h2>Adicionar convidado</h2><form id="addForm"><input id="addName" placeholder="Nome" maxlength="80" required><select id="addCount"><option>1</option><option>2</option><option>3</option><option>4</option><option>5 ou mais</option></select><button>Adicionar</button></form></section><section class="panel"><h2>Lista</h2><p id="adminStatus" class="error" role="status"></p><div class="scroll"><table><thead><tr><th>Nome</th><th>Pessoas</th><th>Data</th><th>Status</th><th>Ações</th></tr></thead><tbody id="rows"></tbody></table></div></section></main><script src="/js/admin.js" defer></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin · Churrasco VIP</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin">
+  <a href="/">← Voltar ao site</a>
+  <h1>Administração de convidados</h1>
+
+  <section id="login" class="panel" aria-labelledby="login-title">
+    <h2 id="login-title">Entrar</h2>
+    <form id="loginForm">
+      <label for="password">Senha</label>
+      <input type="password" id="password" required autocomplete="current-password">
+      <button type="submit">Entrar</button>
+    </form>
+    <p id="loginStatus" class="error" role="status"></p>
+  </section>
+
+  <main id="dashboard" class="hide">
+    <div class="panel toolbar">
+      <strong id="totals" role="status"></strong>
+      <button type="button" id="exportBtn">Exportar CSV</button>
+      <button type="button" id="logoutBtn">Sair</button>
+    </div>
+
+    <section class="panel" aria-labelledby="add-title">
+      <h2 id="add-title">Adicionar convidado</h2>
+      <form id="addForm">
+        <label for="addName">Nome</label>
+        <input id="addName" maxlength="80" required>
+        <label for="addCount">Pessoas</label>
+        <select id="addCount">
+          <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+          <option value="4">4</option><option value="5 ou mais">5 ou mais</option>
+        </select>
+        <button type="submit">Adicionar</button>
+      </form>
+    </section>
+
+    <section class="panel" aria-labelledby="list-title">
+      <h2 id="list-title">Lista</h2>
+      <p id="adminStatus" class="error" role="status"></p>
+      <div class="scroll">
+        <table>
+          <caption class="sr-only">Convidados registrados</caption>
+          <thead>
+            <tr><th scope="col">Nome</th><th scope="col">Pessoas</th><th scope="col">Data</th><th scope="col">Status</th><th scope="col">Ações</th></tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <nav class="pager" aria-label="Paginação">
+        <button type="button" id="prevPage">Anterior</button>
+        <span id="pageInfo"></span>
+        <button type="button" id="nextPage">Próxima</button>
+      </nav>
+    </section>
+  </main>
+
+  <script src="js/admin.js" defer></script>
+</body>
+</html>
