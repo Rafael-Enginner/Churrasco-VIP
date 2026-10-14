@@ -26,14 +26,6 @@
       const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, "_blank", "noopener,noreferrer");
     });
-  }
-
-  const options = [...document.querySelectorAll(".steak-option")];
-  const status = document.getElementById("pointStatus");
-  const labels = {
-    rare: "MAL PASSADA",
-    medium: "AO PONTO",
-    well: "BEM PASSADA"
   };
 
   function choose(option) {
