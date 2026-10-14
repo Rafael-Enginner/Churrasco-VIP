@@ -7,6 +7,7 @@ import pg from 'pg';
 import bcrypt from 'bcryptjs';
 import crypto from 'node:crypto';
 import path from 'node:path';
+import fs from 'node:fs';
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
@@ -27,7 +28,10 @@ const pool = new Pool({
   connectionTimeoutMillis: 15000,
   idleTimeoutMillis: 30000,
   // O pooler do Supabase utiliza TLS. Não desative a validação de certificado.
-  ssl: { rejectUnauthorized: true }
+  ssl: {
+  ca: fs.readFileSync('/etc/secrets/supabase-ca.crt', 'utf8'),
+  rejectUnauthorized: true
+}
 });
 
 app.disable('x-powered-by');
