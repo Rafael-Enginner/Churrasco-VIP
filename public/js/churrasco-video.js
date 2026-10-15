@@ -1,117 +1,133 @@
 (() => {
   "use strict";
 
-  function initBarbecue() {
-    const video = document.getElementById("bbqVideo");
-    const audio = document.getElementById("bbqAudio");
-    const button = document.getElementById("bbqSoundButton");
-    const icon = document.getElementById("bbqSoundIcon");
-    const text = document.getElementById("bbqSoundText");
+  const $ = (id) => document.getElementById(id);
+  const video = $("bbqVideo");
+  const audio = $("bbqAudio");
+  const button = $("bbqSoundButton");
+  const icon = $("bbqSoundIcon");
+  if (!video || !audio || !button || !icon) return;
 
-    if (!video || !audio || !button || !icon || !text) {
-      console.warn("Churrasco: elementos de vídeo ou áudio ausentes.");
+  const container = video.closest(".bbq-video-container") || video;
+  const mobileQuery = window.matchMedia("(max-width: 650px)");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const connection = navigator.connection;
+  const saveData = Boolean(connection && (connection.saveData || /(^|-)2g$/.test(connection.effectiveType || "")));
+  const VOLUME = 0.28;
+
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+  audio.loop = true;
+  audio.volume = 0;
+
+  /* ---------- Vídeo: carrega só quando visível, pausa fora da tela ---------- */
+  let loadedSrc = "";
+  let inView = typeof IntersectionObserver === "undefined"; // sem suporte: assume visível
+
+  const pickSource = () =>
+    mobileQuery.matches
+      ? { src: video.dataset.srcMobile, poster: video.dataset.posterMobile }
+      : { src: video.dataset.srcDesktop, poster: video.dataset.posterDesktop };
+
+  function applyPoster() {
+    const { poster } = pickSource();
+    if (poster && video.getAttribute("poster") !== poster) video.setAttribute("poster", poster);
+  }
+
+  function syncVideo() {
+    // Movimento reduzido ou economia de dados: fica só o poster (imagem estática).
+    const shouldPlay = !reducedMotion.matches && !saveData && inView && !document.hidden;
+    if (shouldPlay) {
+      const { src } = pickSource();
+      if (src && src !== loadedSrc) {
+        loadedSrc = src;
+        video.src = src;
+        video.load();
+      }
+      video.play().catch(() => {}); // sem autorização: o poster continua visível
+    } else if (!video.paused) {
+      video.pause();
+    }
+  }
+
+  if (typeof IntersectionObserver !== "undefined") {
+    new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      syncVideo();
+    }, { threshold: 0.25 }).observe(container);
+  }
+
+  video.addEventListener("error", () => {
+    container.dataset.state = "error"; // o poster permanece visível
+    console.info("Vídeo indisponível; exibindo apenas a imagem.");
+  });
+
+  mobileQuery.addEventListener("change", () => { applyPoster(); syncVideo(); });
+  reducedMotion.addEventListener("change", syncVideo);
+
+  /* ---------- Som: só liga pelo botão ---------- */
+  let soundOn = false;
+  let request = 0;
+  let fadeTimer = 0;
+
+  function fadeTo(target, ms) {
+    clearInterval(fadeTimer);
+    const start = audio.volume;
+    const t0 = performance.now();
+    return new Promise((resolve) => {
+      fadeTimer = setInterval(() => {
+        const k = Math.min(1, (performance.now() - t0) / ms);
+        audio.volume = start + (target - start) * k;
+        if (k === 1) { clearInterval(fadeTimer); resolve(); }
+      }, 40);
+    });
+  }
+
+  function renderButton() {
+    button.setAttribute("aria-pressed", String(soundOn));
+    icon.textContent = soundOn ? "🔊" : "🔇";
+  }
+
+  async function enableSound() {
+    const id = ++request;
+    try {
+      await audio.play();
+    } catch (err) {
+      if (id !== request) return;
+      soundOn = false;
+      renderButton();
+      console.info("O navegador não conseguiu reproduzir o áudio.", err);
       return;
     }
+    if (id !== request) return;
+    soundOn = true;
+    renderButton();
+    fadeTo(VOLUME, 400);
+  }
 
-    video.muted = true;
-    video.loop = true;
-    video.playsInline = true;
+  async function disableSound() {
+    const id = ++request;
+    soundOn = false;
+    renderButton();
+    await fadeTo(0, 250);
+    if (id === request) audio.pause();
+  }
 
-    audio.volume = 0.28;
-    audio.loop = true;
+  button.addEventListener("click", () => (soundOn ? disableSound() : enableSound()));
 
-    let soundEnabled = false;
-    let soundRequest = 0;
-
-    function updateButton() {
-      button.setAttribute("aria-pressed", String(soundEnabled));
-
-      icon.textContent = soundEnabled ? "🔊" : "🔇";
-      text.textContent = soundEnabled
-        ? "Desligar som da brasa"
-        : "Ativar som da brasa";
-    }
-
-    async function enableSound() {
-      const request = ++soundRequest;
-
-      try {
-        await audio.play();
-
-        if (request !== soundRequest) {
-          return;
-        }
-
-        soundEnabled = true;
-        updateButton();
-      } catch (error) {
-        if (request !== soundRequest) {
-          return;
-        }
-
-        soundEnabled = false;
-        updateButton();
-
-        console.info(
-          "O navegador bloqueou ou não conseguiu reproduzir o áudio.",
-          error,
-        );
-      }
-    }
-
-    function disableSound() {
-      ++soundRequest;
+  /* ---------- Aba em segundo plano: pausa tudo e retoma o que estava ligado ---------- */
+  document.addEventListener("visibilitychange", () => {
+    syncVideo();
+    if (document.hidden) {
       audio.pause();
-      soundEnabled = false;
-      updateButton();
+    } else if (soundOn) {
+      audio.volume = VOLUME;
+      audio.play().catch(() => { soundOn = false; renderButton(); });
     }
+  });
 
-    button.addEventListener("click", (event) => {
-      event.stopPropagation();
-
-      if (soundEnabled) {
-        disableSound();
-      } else {
-        enableSound();
-      }
-    });
-
-    // Primeira interação fora do botão:
-    // tenta ativar o áudio ambiente.
-    function firstInteraction(event) {
-      if (button.contains(event.target)) {
-        return;
-      }
-
-      document.removeEventListener("pointerdown", firstInteraction);
-      document.removeEventListener("keydown", firstInteraction);
-
-      if (!soundEnabled) {
-        enableSound();
-      }
-    }
-
-    document.addEventListener("pointerdown", firstInteraction, {
-      passive: true,
-    });
-
-    document.addEventListener("keydown", firstInteraction);
-
-    // Inicia o vídeo sem som, conforme permitido pelo navegador.
-    const playPromise = video.play();
-
-    if (playPromise && typeof playPromise.catch === "function") {
-      playPromise.catch((error) => {
-        console.info("Vídeo aguardando autorização de reprodução.", error);
-      });
-    }
-
-    updateButton();
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initBarbecue);
-  } else {
-    initBarbecue();
-  }
+  applyPoster();
+  renderButton();
+  syncVideo();
 })();

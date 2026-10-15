@@ -200,6 +200,8 @@ app.delete('/api/admin/guests/:id', auth, csrf, asyncRoute(async (req, res) => {
 
 /* ---------- Estáticos e erros ---------- */
 app.use('/api', (_req, res) => res.status(404).json({ error: 'Não encontrado' }));
+// Vídeo e áudio: cache de 7 dias. Para forçar atualização, troque o nome do arquivo.
+app.use('/media', express.static('public/media', { maxAge: production ? '7d' : 0 }));
 app.use(express.static('public', { maxAge: production ? '1h' : 0 }));
 app.get('/admin', (_req, res) => res.sendFile(path.resolve('public/admin.html')));
 

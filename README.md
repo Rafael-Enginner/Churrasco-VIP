@@ -10,6 +10,7 @@ O projeto oferece uma landing page responsiva e interativa, integrada a um backe
 - Painel administrativo com paginação, total de pessoas confirmadas e gerenciamento de convidados.
 - Atualização de status e exportação CSV protegida contra injeção de fórmulas.
 - Autenticação com bcrypt, sessões, proteção CSRF e limite de tentativas.
+- Vídeo real da carne na brasa no topo da página, com som ambiente opcional (ligado só pelo botão). O vídeo carrega só quando visível, pausa fora da tela e respeita "reduzir movimento" e economia de dados (`public/js/churrasco-video.js`).
 - Prévia de link para WhatsApp (Open Graph) e foco em acessibilidade.
 - Player de música com seleção de arquivos locais: o código está em `public/js/script.js` e só é ativado quando a página contém os elementos `musicFiles`, `audioPlayer`, `playlist` e `trackTitle`. O HTML do player não faz parte do `index.html` atual.
 - Hospedagem no Render e banco de dados no Supabase.
@@ -24,7 +25,8 @@ O projeto oferece uma landing page responsiva e interativa, integrada a um backe
 server.js              API Express e servidor de arquivos estáticos
 db/001_migrate.sql     migração do esquema antigo para o atual
 scripts/hash-password.js  gera o hash da senha do painel
-public/                site (index.html, admin.html, css/, js/, img/)
+public/                site (index.html, admin.html, css/, js/, img/, media/)
+public/media/          vídeo (desktop e celular), posters e áudio ambiente
 .env.example           modelo das variáveis de ambiente
 ```
 
@@ -79,3 +81,7 @@ Se o servidor detectar o esquema antigo, ele se recusa a iniciar e informa o mot
 São coletados apenas nome e quantidade de pessoas, para a organização do evento. Apague os registros depois da festa (pelo painel ou removendo as linhas de `guests` no Supabase).
 
 Projeto desenvolvido para fins práticos de aprendizagem, aplicação de conceitos de Engenharia de Software e construção de portfólio.
+
+## Mídia (vídeo e áudio)
+
+O vídeo original é 4K e pesa 20 MB; o site usa versões otimizadas (1280 px com 1,7 MB no desktop e 720 px em 5:4 com cerca de 1,4 MB no celular), com `faststart`, para começar a tocar logo. Para trocar o vídeo, gere novas versões com o mesmo formato e **mude o nome dos arquivos** (o servidor guarda `/media` em cache por 7 dias).
