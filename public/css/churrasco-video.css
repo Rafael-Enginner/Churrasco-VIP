@@ -1,0 +1,209 @@
+/* Vídeo real da churrasqueira */
+.bbq-video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #160b07;
+  box-shadow: 0 20px 65px rgba(0, 0, 0, 0.4);
+  isolation: isolate;
+}
+
+.bbq-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.bbq-video-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.08),
+    transparent 60%,
+    rgba(0, 0, 0, 0.25)
+  );
+}
+
+.bbq-sound-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 12px 18px;
+  border: 1px solid rgba(255, 160, 70, 0.5);
+  border-radius: 999px;
+  background: rgba(24, 12, 7, 0.85);
+  color: #fff1e5;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.bbq-sound-button:hover {
+  background: rgba(80, 31, 12, 0.95);
+  border-color: #ff8a36;
+  transform: translateY(-2px);
+}
+
+.bbq-sound-button:focus-visible {
+  outline: 3px solid #ff9b42;
+  outline-offset: 3px;
+}
+
+.bbq-sound-button[aria-pressed="true"] {
+  border-color: #ff8a36;
+  color: #ffc28c;
+}
+
+@media (max-width: 600px) {
+  .bbq-video-container {
+    aspect-ratio: 4 / 5;
+    border-radius: 16px;
+  }
+
+  .bbq-sound-button {
+    width: 100%;
+    max-width: 290px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bbq-sound-button {
+    transition: none;
+  }
+}
+
+.hero > .hero-copy,
+.hero > .hero-art-video {
+  min-width: 0;
+}
+
+.hero-art.hero-art-video {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  height: auto;
+  min-height: 490px;
+  padding: 24px 0 72px;
+  transform: none;
+  overflow: visible;
+}
+
+.hero-art-video .bbq-video-container {
+  width: 100%;
+  max-width: 620px;
+  flex: none;
+}
+
+.hero-art-video .art-stamp {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.hero-art-video .art-caption {
+  position: static;
+  margin: 0;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.hero-art-video .bbq-sound-button {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  min-height: 44px;
+}
+
+.hero-art-video .bbq-video {
+  background: #160b07;
+}
+
+/* Evita que o formulário ultrapasse a tela */
+.rsvp > *,
+.location-card > *,
+.detail-grid > * {
+  min-width: 0;
+}
+
+.rsvp-panel input,
+.rsvp-panel select,
+.rsvp-panel button {
+  max-width: 100%;
+}
+
+/* Tablets */
+@media (max-width: 900px) {
+  .hero-art.hero-art-video {
+    min-height: 0;
+    padding: 24px 0 72px;
+    transform: none;
+  }
+
+  .hero-art-video .art-stamp {
+    width: 76px;
+    height: 76px;
+    font-size: 12px;
+  }
+}
+
+/* Celulares */
+@media (max-width: 650px) {
+  .hero {
+    padding-bottom: 48px;
+  }
+
+  .hero-art.hero-art-video {
+    width: 100%;
+    min-height: 0;
+    height: auto;
+    margin-top: 30px;
+    padding: 0 0 24px;
+    transform: none;
+  }
+
+  .hero-art-video .bbq-video-container {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border-radius: 16px;
+  }
+
+  .hero-art-video .art-stamp {
+    top: 12px;
+    right: 12px;
+    width: 70px;
+    height: 70px;
+    font-size: 11px;
+  }
+
+  .hero-art-video .art-caption {
+    font-size: 9px;
+    letter-spacing: 1px;
+  }
+
+  .hero-art-video .bbq-sound-button {
+    width: 100%;
+    max-width: 290px;
+  }
+
+  .hero-bottom {
+    bottom: 0;
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "eslint.validate": ["javascript"],
+  "css.validate": true,
+  "editor.formatOnSave": true
+}
