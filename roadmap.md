@@ -1,0 +1,4 @@
+- [x] Contagem regressiva
+- [x] Lista do que levar (sugestões + campo livre) salva no Cloud
+- [x] Painel admin (/admin) com login
+- [x] Animações de rolagem (slide + espetos)
