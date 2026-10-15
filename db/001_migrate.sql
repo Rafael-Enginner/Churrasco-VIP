@@ -27,11 +27,23 @@ begin
     alter table public.guests add constraint guests_guest_count_chk check (guest_count between 1 and 5);
 
     alter table public.guests rename column "guestCount" to guest_count_legacy;
+    alter table public.guests alter column guest_count_legacy drop not null;
     alter table public.guests rename column "createdAt" to created_at;
 
     alter table public.guests add constraint guests_name_len_chk check (char_length(name) between 1 and 80);
     alter table public.guests add constraint guests_status_chk check (status in ('Pendente', 'Confirmado'));
     alter table public.guests add column name_key text generated always as (lower(btrim(name))) stored;
+  end if;
+end $$;
+
+-- 2b) Corrige bancos que já rodaram a primeira versão desta migração: a coluna antiga
+--     continuava NOT NULL e fazia toda nova confirmação falhar com "Erro interno".
+do $$
+begin
+  if exists (select 1 from information_schema.columns
+             where table_schema = 'public' and table_name = 'guests'
+               and column_name = 'guest_count_legacy' and is_nullable = 'NO') then
+    alter table public.guests alter column guest_count_legacy drop not null;
   end if;
 end $$;
 

@@ -111,6 +111,15 @@ async function initializeDatabase() {
     `SELECT 1 FROM information_schema.columns WHERE table_name = 'guests' AND column_name = 'guest_count'`);
   if (!rowCount) throw new Error('Esquema antigo detectado. Execute db/001_migrate.sql no Supabase antes de iniciar.');
 
+  // Bancos migrados pela primeira versão do 001 mantinham a coluna antiga como NOT NULL.
+  await pool.query(`
+    DO $$ BEGIN
+      IF EXISTS (SELECT 1 FROM information_schema.columns
+                 WHERE table_schema = 'public' AND table_name = 'guests'
+                   AND column_name = 'guest_count_legacy' AND is_nullable = 'NO') THEN
+        ALTER TABLE guests ALTER COLUMN guest_count_legacy DROP NOT NULL;
+      END IF;
+    END $$`);
   await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS guests_name_key_idx ON guests (name_key)`);
   await pool.query(`CREATE INDEX IF NOT EXISTS guests_created_at_idx ON guests (created_at DESC)`);
   await pool.query(`

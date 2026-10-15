@@ -38,6 +38,9 @@
   function syncVideo() {
     // Movimento reduzido ou economia de dados: fica só o poster (imagem estática).
     const shouldPlay = !reducedMotion.matches && !saveData && inView && !document.hidden;
+    if (!shouldPlay && inView && !document.hidden) {
+      console.info("Vídeo parado de propósito:", reducedMotion.matches ? "sistema pede movimento reduzido" : "economia de dados");
+    }
     if (shouldPlay) {
       const { src } = pickSource();
       if (src && src !== loadedSrc) {
@@ -45,7 +48,7 @@
         video.src = src;
         video.load();
       }
-      video.play().catch(() => {}); // sem autorização: o poster continua visível
+      video.play().catch((err) => console.info("Vídeo não iniciou:", err.name)); // o poster continua visível
     } else if (!video.paused) {
       video.pause();
     }
